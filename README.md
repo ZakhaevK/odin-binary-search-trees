@@ -1,3 +1,3 @@
-# odin-linked-list
+# odin-binary-search-trees
 
-Simple project for creating a Linked List class, featuring a Node class.
+Simple project with Tree and Node classes, for creation of a balanced binary search tree.
