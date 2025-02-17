@@ -64,37 +64,106 @@ class Tree {
   deleteItem(target, root = this.root) {
     // Base case
     if (root === null) {
-        return root;
+      return root;
     }
 
     // If key to be searched is in a subtree
     if (root.data > target) {
-        root.left = this.deleteItem(target, root.left);
+      root.left = this.deleteItem(target, root.left);
     } else if (root.data < target) {
-        root.right = this.deleteItem(target, root.right);
+      root.right = this.deleteItem(target, root.right);
     } else {
-        // If root matches with the given key
+      // If root matches with the given key
 
-        // Cases when root has 0 children or only right child
-        if (root.left === null) 
-            return root.right;
+      // Cases when root has 0 children or only right child
+      if (root.left === null) return root.right;
 
-        // When root has only left child
-        if (root.right === null) 
-            return root.left;
+      // When root has only left child
+      if (root.right === null) return root.left;
 
-        // When both children are present
-        let succ = root.right;
-        while (succ !== null && succ.left !== null) {
-          succ = succ.left;
-        }
-        root.data = succ.data;
-        root.right = this.deleteItem(succ.data, root.right);
+      // When both children are present
+      let succ = root.right;
+      while (succ !== null && succ.left !== null) {
+        succ = succ.left;
+      }
+      root.data = succ.data;
+      root.right = this.deleteItem(succ.data, root.right);
     }
     return root;
   }
 
+  // Uses iterative level order to find
+  find(value) {
 
+    if (!this.root) return null;
+  
+    const queue = [this.root];
+  
+    while (queue.length > 0) {
+      let root = queue.shift();
+      if (root.data === value) return root;
+  
+      if (root.left) queue.push(root.left);
+      if (root.right) queue.push(root.right);
+    }
+  
+    return null;
+  }
+
+  // Uses recursive level order and applies callback on each node
+  levelOrder(callback, root = this.root) {
+    if (!callback) throw Error("No callback provided");
+    // Build the result array
+    const result = [] 
+    this.levelOrderRec(root, 0, result);
+    // Access each level and apply the callback
+    result.forEach(level => {
+      level.forEach(callback);
+    });
+
+  }
+
+  // Recursive levelOrder, used by levelOrder()
+  levelOrderRec(root = this.root, level, result) {
+    if (!root) return;
+    if (result.length <= level)
+      result.push([])
+
+    result[level].push(root.data)
+
+    this.levelOrderRec(root.left, level + 1, result)
+    this.levelOrderRec(root.right, level + 1, result)
+  }
+
+  inOrder(callback, root = this.root) {
+    if (!callback) throw Error("No callback provided");
+
+    if (root !== null) {
+      this.inOrder(callback, root.left);
+      callback(root.data);
+      this.inOrder(callback, root.right);
+    }
+  }
+
+  preOrder(callback, root = this.root) {
+    if (!callback) throw Error("No callback provided");
+
+    if (root !== null) {
+      callback(root.data);
+      this.preOrder(callback, root.left);
+      this.preOrder(callback, root.right);
+    }
+  }
+
+  postOrder(callback, root = this.root) {
+    if (!callback) throw Error("No callback provided");
+
+    if (root !== null) {
+      this.postOrder(callback, root.left);
+      this.postOrder(callback, root.right);
+      callback(root.data);
+    }
+  }
 }
 
 const prettyPrint = (node, prefix = "", isLeft = true) => {

@@ -7,3 +7,11 @@ const testTree = new Tree(testArray);
 prettyPrint(testTree.root);
 testTree.deleteItem(67);
 prettyPrint(testTree.root);
+
+function print(thing) {
+  console.log(thing);
+}
+
+console.log(testTree.find(23));
+testTree.levelOrder(print);
+
